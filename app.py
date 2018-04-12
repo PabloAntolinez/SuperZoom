@@ -30,7 +30,8 @@ RIGHTBUTTON = 3
 BRIGHTNESS = 1000
 WIDTH = 3264
 HEIGHT = 2448
-
+SCREENW = 1920
+SCREENH	= 1080
 
 		
 if __name__ == '__main__':
@@ -45,8 +46,8 @@ if __name__ == '__main__':
 	capture0.set(cv2.CAP_PROP_FRAME_HEIGHT  , HEIGHT)
 	#capture1.set(4  , HEIGHT)
 		
-	windowSurface = pygame.display.set_mode((1200, 800), pygame.NOFRAME | pygame.FULLSCREEN)
-	pygame.mouse.set_pos([600,400])
+	windowSurface = pygame.display.set_mode((SCREENW, SCREENH), pygame.NOFRAME | pygame.FULLSCREEN)
+	pygame.mouse.set_pos([SCREENW/2,SCREENH/2])
 	pygame.mouse.set_visible(0)
 	
 	while not finished:
@@ -74,7 +75,7 @@ if __name__ == '__main__':
 		while not refresh and not finished:
 			zoom = collage[0: int(width/zoomLevel), 0: int(height/zoomLevel)]
 			print ( width/zoomLevel )
-			zoom = cv2.resize(zoom, ( 1200, 800), cv2.INTER_LANCZOS4)
+			zoom = cv2.resize(zoom, ( SCREENW, SCREENH), cv2.INTER_LANCZOS4)
 			
 			b ,g ,r = cv2.split(zoom)
 			zoomrgb = cv2.merge((r, g ,b ))
@@ -110,8 +111,8 @@ if __name__ == '__main__':
 						finished = True
 					elif event.type == pygame.MOUSEMOTION :
 						(x,y) = event.pos
-						dx = 600 - x
-						dy = 400 - y
+						dx =  x - SCREENW/2
+						dy =  y - SCREENH/2
 						#pygame.mouse.set_pos([600,400])
 						print(dx)
 						print(dy)
