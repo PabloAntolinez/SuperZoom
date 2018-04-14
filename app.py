@@ -50,6 +50,8 @@ if __name__ == '__main__':
 	pygame.mouse.set_pos([SCREENW/2,SCREENH/2])
 	pygame.mouse.set_visible(0)
 	
+	myfont = pygame.font.SysFont("monospace", 15)
+	
 	while not finished:
 		for g in range(5): # because stupid videostream contains 5 images and cannot reduce 
 			(grabbed0,frame0) = capture0.read()
@@ -69,26 +71,32 @@ if __name__ == '__main__':
 		
 		#cv2.imshow('f1', f1)
 		collage = np.hstack([frame0, frame1])
+
 		
 		height, width, channel = collage.shape
+		ratioCollage = height / width
 		refresh = False
 		while not refresh and not finished:
-			zoom = collage[0: int(width/zoomLevel), 0: int(height/zoomLevel)]
-			print ( width/zoomLevel )
-			zoom = cv2.resize(zoom, ( SCREENW, SCREENH), cv2.INTER_LANCZOS4)
+			zoom = collage[0: int(height/zoomLevel), 0: int(width/zoomLevel)] # line collumn => Y X
+			zoom = cv2.resize(zoom, ( SCREENW, int(ratioCollage * SCREENW)), cv2.INTER_LANCZOS4)
 			
 			b ,g ,r = cv2.split(zoom)
 			zoomrgb = cv2.merge((r, g ,b ))
 
 			img = pygame.image.frombuffer(zoomrgb.tostring(), zoomrgb.shape[1::-1],"RGB")
+			
+			text = str(dx) + ' ' + str(dy)
+			#pygame.freetype.Font.render_to(windowSurface, (10,10), text, (255,255,255))
+			
 			windowSurface.blit(img, (0, 0))
-
+			
 			pygame.display.flip()
 
 			done = False
 			refresh = False
 			finished = False
 			while not done and not refresh and not finished:
+
 				for event in pygame.event.get():
 					if event.type == pygame.QUIT:
 						finished = True
