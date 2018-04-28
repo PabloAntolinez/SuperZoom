@@ -367,11 +367,11 @@ if __name__ == '__main__':
 	subprocess.call(['v4l2-ctl -d /dev/video0 -l'], shell=True)
 	
  	### go through and set each property; 
-	# for key in cam_props:
-	    # subprocess.call(['v4l2-ctl -d /dev/video1 -c {}={}'.format(key, str(cam_props[key]))],shell=True)
+	for key in cam_props:
+	    subprocess.call(['v4l2-ctl -d /dev/video1 -c {}={}'.format(key, str(cam_props[key]))],shell=True)
 
 	### uncomment to print out/verify the above settings took
-	# subprocess.call(['v4l2-ctl -d /dev/video1 -l'], shell=True)
+	subprocess.call(['v4l2-ctl -d /dev/video1 -l'], shell=True)
    
 	### showing that I *think* one should only create the opencv capture object after these are set
 	### also remember to change the device number if necessary
@@ -382,9 +382,9 @@ if __name__ == '__main__':
 
 	### showing that I *think* one should only create the opencv capture object after these are set
 	### also remember to change the device number if necessary
-	# capture1 = cv2.VideoCapture(INDEXRIGHTCAM)
-	# capture1.set(cv2.CAP_PROP_FRAME_WIDTH , CAMW)
-	# capture1.set(cv2.CAP_PROP_FRAME_HEIGHT  , CAMH)
+	capture1 = cv2.VideoCapture(INDEXRIGHTCAM)
+	capture1.set(cv2.CAP_PROP_FRAME_WIDTH , CAMW)
+	capture1.set(cv2.CAP_PROP_FRAME_HEIGHT  , CAMH)
 	
 	collage = np.empty(( IMTOTH, IMTOTW, 3), dtype=np.uint8) # creation du buffer collage en UINT8 vide
 	height, width, channel = collage.shape
