@@ -10,6 +10,7 @@ from pygame.locals import *
 import RPi.GPIO as GPIO
 #from gpiozero import LED, Button
 from time import sleep
+from time import time
 import subprocess
 
 
@@ -20,6 +21,8 @@ centerLedPin = 5
 rightLedPin = 3
 offButtonPin = 33
 onLedPin = 29
+holdTimeOff = 5
+
 
 #state variables
 done = False
@@ -145,7 +148,14 @@ def ButtonCB(channel): # call back when button pressed
 	refresh = True
 	
 def OffCB(channel): # call back when button pressed
-	subprocess.call(['shutdown', '-h', 'now'], shell=False)
+	startTime = time()	
+	while GPIO.input(offButtonPin) == 0 : # wait for release
+		pass		
+	holdTime = time() - startTime
+	
+	if holdTime > holdTimeOff :
+		print("off")
+		# subprocess.call(['shutdown', '-h', 'now'], shell=False)
 
 def InitGPIO():	#Set up and init GPIO
 	GPIO.setmode(GPIO.BOARD) # use number on the board
@@ -156,7 +166,7 @@ def InitGPIO():	#Set up and init GPIO
 	GPIO.setup(centerLedPin, GPIO.OUT)
 	GPIO.setup(onLedPin, GPIO.OUT)
 	GPIO.add_event_detect(buttonPin, GPIO.FALLING, callback=ButtonCB, bouncetime=75)
-	GPIO.add_event_detect(offButtonPin, GPIO.FALLING, callback=OffCB, bouncetime=2000)
+	GPIO.add_event_detect(offButtonPin, GPIO.FALLING, callback=OffCB, bouncetime=500)
 	GPIO.output(onLedPin , GPIO.HIGH)
 	
 def InitPygame():
